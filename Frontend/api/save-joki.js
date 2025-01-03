@@ -4,16 +4,13 @@ export default async function handler(req, res) {
   const formData = req.body;
 
   try {
-    const backendResponse = await fetch(
-      process.env.BACKEND_URL + "/api/save-joki", // Mengakses BACKEND_URL dari environment variable
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    const backendResponse = await fetch(process.env.NEXT_PUBLIC_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(formData),
+    });
 
     if (backendResponse.ok) {
       const data = await backendResponse.json();
