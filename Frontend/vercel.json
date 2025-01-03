@@ -9,7 +9,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "api/$k
+      "dest": "api/$1"
     }
   ],
   "env": {
