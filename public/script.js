@@ -116,14 +116,7 @@ async function saveToMongoDB() {
       body: JSON.stringify(formData),
     });
 
-    const responseData = await response.text();
-    let errorData;
-
-    try {
-      errorData = JSON.parse(responseData);
-    } catch (e) {
-      errorData = { message: responseData };
-    }
+    const responseData = await response.json(); // Changed from text() to json()
 
     if (response.ok) {
       Swal.fire({
@@ -138,13 +131,15 @@ async function saveToMongoDB() {
         },
       });
     } else {
-      throw new Error(errorData.message || "Gagal menyimpan data ke database");
+      throw new Error(
+        responseData.message || "Gagal menyimpan data ke database",
+      );
     }
   } catch (error) {
     Swal.fire({
       icon: "error",
       title: "Oops...",
-      text: error.message,
+      text: "Terjadi kesalahan server. Silakan coba lagi.",
       background: "#fff",
       customClass: {
         popup: "animated shake",
