@@ -108,7 +108,7 @@ async function saveToMongoDB() {
   };
 
   try {
-    const response = await fetch("/api", {
+    const response = await fetch("https://submit-joki-copip.vercel.app/api", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

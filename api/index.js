@@ -31,14 +31,14 @@ app.use(
 );
 
 // 3. Body Parser (untuk parsing request body JSON)
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 // Koneksi ke MongoDB
 mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000,
+    serverSelectionTimeoutMS: 30000, // Increased timeout
   })
   .then(() => console.log("MongoDB Terhubung"))
   .catch((err) => console.error("Koneksi MongoDB gagal:", err));
@@ -64,7 +64,30 @@ const Joki = mongoose.model("Joki", jokiSchema);
 app.post("/api", async (req, res) => {
   try {
     if (!req.body) {
-      throw new Error("Request body is empty");
+      return res.status(400).json({
+        error: "Request body kosong",
+        message: "Data tidak ditemukan dalam request",
+      });
+    }
+
+    // Validate required fields
+    const requiredFields = [
+      "idJoki",
+      "namaPenjoki",
+      "idKlien",
+      "tanggalTerima",
+      "tanggalSelesai",
+      "metode",
+      "nota",
+      "status",
+    ];
+    for (const field of requiredFields) {
+      if (!req.body[field]) {
+        return res.status(400).json({
+          error: "Data tidak lengkap",
+          message: `Field ${field} harus diisi`,
+        });
+      }
     }
 
     // Format nota to store raw number
@@ -73,7 +96,7 @@ app.post("/api", async (req, res) => {
       deskripsi: req.body.deskripsi || "-",
       linkFile: req.body.linkFile || "-",
       catatan: req.body.catatan || "-",
-      nota: req.body.nota.replace(/[^0-9]/g, ""),
+      nota: req.body.nota.toString().replace(/[^0-9]/g, ""),
       tanggalTerima: `${req.body.tanggalTerima}`,
       tanggalSelesai: `${req.body.tanggalSelesai}`,
     };
@@ -82,7 +105,10 @@ app.post("/api", async (req, res) => {
     const savedJoki = await newJoki.save();
 
     if (!savedJoki) {
-      throw new Error("Failed to save data");
+      return res.status(500).json({
+        error: "Gagal menyimpan data",
+        message: "Data tidak berhasil disimpan ke database",
+      });
     }
 
     res.status(201).json(savedJoki);
@@ -98,7 +124,7 @@ app.post("/api", async (req, res) => {
 
     return res.status(500).json({
       error: "Gagal menyimpan data ke database",
-      message: error.message,
+      message: error.message || "Terjadi kesalahan internal server",
     });
   }
 });
