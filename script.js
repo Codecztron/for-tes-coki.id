@@ -1,5 +1,8 @@
-function generateOutput() {
+document.getElementById("formJoki").addEventListener("submit", function (e) {
+  e.preventDefault();
+
   const idJoki = document.getElementById("idJoki").value;
+  const namaPenjoki = document.getElementById("namaPenjoki").value;
   const idKlien = document.getElementById("idKlien").value;
   const tanggalTerimaDate = document.getElementById("tanggalTerimaDate").value;
   const tanggalTerimaTime = document.getElementById("tanggalTerimaTime").value;
@@ -9,6 +12,7 @@ function generateOutput() {
     document.getElementById("tanggalSelesaiTime").value;
   const deskripsi = document.getElementById("deskripsi").value;
   const metode = document.getElementById("metode").value;
+  const nota = document.getElementById("nota").value.replace(/[^0-9]/g, "");
   const status = document.getElementById("status").value;
   const linkFile = document.getElementById("linkFile").value;
   const catatan = document.getElementById("catatan").value || "-";
@@ -16,7 +20,30 @@ function generateOutput() {
   const tanggalTerima = `${tanggalTerimaDate} ${tanggalTerimaTime}`;
   const tanggalSelesai = `${tanggalSelesaiDate} ${tanggalSelesaiTime}`;
 
-  const output = `--------------------------------------------------
+  const formattedNota = `Rp ${nota.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+
+  const outputAdmin = `--------------------------------------------------
+*DATA JOKI CODING - @coding_kilat.id*
+--------------------------------------------------
+
+*INFORMASI TUGAS*
+-----------------
+ID Joki        : ${idJoki}
+Nama Penjoki   : ${namaPenjoki}
+ID Klien       : ${idKlien}
+Tanggal Terima : ${tanggalTerima}
+Tanggal Selesai: ${tanggalSelesai}
+Deskripsi      : ${deskripsi || "-"}
+
+*PEMBAYARAN*
+-----------
+Metode         : ${metode || "-"}
+Nota           : ${formattedNota}
+Status         : ${status}
+
+--------------------------------------------------`;
+
+  const outputCustomer = `--------------------------------------------------
 *PENYELESAIAN JOKI CODING - @coding_kilat.id*
 --------------------------------------------------
 
@@ -46,11 +73,16 @@ Balas "*Done*" jika penugasan sudah selesai dan diterima.
 *Terima kasih!*
 --------------------------------------------------`;
 
-  document.getElementById("output").innerText = output;
+  document.getElementById("outputAdmin").innerText = outputAdmin;
+  document.getElementById("outputCustomer").innerText = outputCustomer;
+});
+
+function formatRupiah(angka) {
+  return `Rp ${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
 }
 
-function copyToClipboard() {
-  const outputText = document.getElementById("output").innerText;
+function copyToClipboard(outputId) {
+  const outputText = document.getElementById(outputId).innerText;
   navigator.clipboard
     .writeText(outputText)
     .then(() => {
