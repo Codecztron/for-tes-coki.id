@@ -23,10 +23,10 @@ app.use(limiter);
 // 2. CORS (untuk mengizinkan request dari frontend)
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL, // Ambil dari .env (hanya izinkan dari frontend Anda)
+    origin: "*", // Allow all origins temporarily for debugging
     methods: ["GET", "POST"],
-    allowedHeaders: ["Content-Type", "Authorization"], // Header yang diizinkan
-    credentials: false, // Set to true only if necessary for cookies, authorization headers with HTTPS
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: false,
   }),
 );
 
@@ -35,7 +35,11 @@ app.use(express.json());
 
 // Koneksi ke MongoDB
 mongoose
-  .connect(process.env.MONGODB_URI)
+  .connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+  })
   .then(() => console.log("MongoDB Terhubung"))
   .catch((err) => console.error("Koneksi MongoDB gagal:", err));
 
@@ -59,6 +63,10 @@ const Joki = mongoose.model("Joki", jokiSchema);
 // API Endpoint untuk menyimpan data
 app.post("/api", async (req, res) => {
   try {
+    if (!req.body) {
+      throw new Error("Request body is empty");
+    }
+
     // Format data sesuai dengan struktur dari frontend
     const formattedData = {
       ...req.body,
@@ -69,21 +77,26 @@ app.post("/api", async (req, res) => {
 
     const newJoki = new Joki(formattedData);
     const savedJoki = await newJoki.save();
+
+    if (!savedJoki) {
+      throw new Error("Failed to save data");
+    }
+
     res.status(201).json(savedJoki);
   } catch (error) {
     console.error("Error saat menyimpan data:", error);
 
     if (error.name === "ValidationError") {
-      res.status(400).json({
+      return res.status(400).json({
         error: "Validasi data gagal",
         message: error.message,
       });
-    } else {
-      res.status(500).json({
-        error: "Gagal menyimpan data ke database",
-        message: error.message,
-      });
     }
+
+    return res.status(500).json({
+      error: "Gagal menyimpan data ke database",
+      message: error.message,
+    });
   }
 });
 

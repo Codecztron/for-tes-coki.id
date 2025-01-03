@@ -116,9 +116,12 @@ async function saveToMongoDB() {
       body: JSON.stringify(formData),
     });
 
+    const responseData = await response.json();
+
     if (!response.ok) {
-      const text = await response.text();
-      throw new Error(text || "Gagal menyimpan data ke database");
+      throw new Error(
+        responseData.message || "Gagal menyimpan data ke database",
+      );
     }
 
     Swal.fire({
@@ -136,7 +139,7 @@ async function saveToMongoDB() {
     Swal.fire({
       icon: "error",
       title: "Oops...",
-      text: "Terjadi kesalahan server. Silakan coba lagi.",
+      text: error.message || "Terjadi kesalahan server. Silakan coba lagi.",
       background: "#fff",
       customClass: {
         popup: "animated shake",
