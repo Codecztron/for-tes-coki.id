@@ -67,12 +67,15 @@ app.post("/api", async (req, res) => {
       throw new Error("Request body is empty");
     }
 
-    // Format data sesuai dengan struktur dari frontend
+    // Format nota to store raw number
     const formattedData = {
       ...req.body,
       deskripsi: req.body.deskripsi || "-",
       linkFile: req.body.linkFile || "-",
       catatan: req.body.catatan || "-",
+      nota: req.body.nota.replace(/[^0-9]/g, ""),
+      tanggalTerima: `${req.body.tanggalTerima}`,
+      tanggalSelesai: `${req.body.tanggalSelesai}`,
     };
 
     const newJoki = new Joki(formattedData);

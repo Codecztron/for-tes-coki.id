@@ -116,7 +116,12 @@ async function saveToMongoDB() {
       body: JSON.stringify(formData),
     });
 
-    const responseData = await response.json();
+    let responseData;
+    try {
+      responseData = await response.json();
+    } catch (parseError) {
+      throw new Error("Gagal memproses respons dari server");
+    }
 
     if (!response.ok) {
       throw new Error(
