@@ -109,13 +109,21 @@ async function saveToMongoDB() {
 
   try {
     const response = await fetch("/api", {
-      // Ubah URL menjadi /api
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
     });
+
+    const responseData = await response.text();
+    let errorData;
+
+    try {
+      errorData = JSON.parse(responseData);
+    } catch (e) {
+      errorData = { message: responseData };
+    }
 
     if (response.ok) {
       Swal.fire({
@@ -130,7 +138,6 @@ async function saveToMongoDB() {
         },
       });
     } else {
-      const errorData = await response.json();
       throw new Error(errorData.message || "Gagal menyimpan data ke database");
     }
   } catch (error) {
