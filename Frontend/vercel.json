@@ -13,6 +13,6 @@
     }
   ],
   "env": {
-    "BACKEND_URL": "@backend_url"
+    "BACKEND_URL": "backend_url"
   }
 }
