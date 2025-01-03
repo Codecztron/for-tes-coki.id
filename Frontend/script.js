@@ -24,55 +24,55 @@ function generateOutput(e) {
   const formattedNota = `Rp ${nota.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
 
   const outputAdmin = `--------------------------------------------------
-*DATA JOKI CODING - @coding_kilat.id*
---------------------------------------------------
+  *DATA JOKI CODING - @coding_kilat.id*
+  --------------------------------------------------
 
-*INFORMASI TUGAS*
------------------
-ID Joki        : ${idJoki}
-Nama Penjoki   : ${namaPenjoki}
-ID Klien       : ${idKlien}
-Tanggal Terima : ${tanggalTerima}
-Tanggal Selesai: ${tanggalSelesai}
-Deskripsi      : ${deskripsi || "-"}
+  *INFORMASI TUGAS*
+  -----------------
+  ID Joki        : ${idJoki}
+  Nama Penjoki   : ${namaPenjoki}
+  ID Klien       : ${idKlien}
+  Tanggal Terima : ${tanggalTerima}
+  Tanggal Selesai: ${tanggalSelesai}
+  Deskripsi      : ${deskripsi || "-"}
 
-*PEMBAYARAN*
------------
-Metode         : ${metode || "-"}
-Nota           : ${formattedNota}
-Status         : ${status}
+  *PEMBAYARAN*
+  -----------
+  Metode         : ${metode || "-"}
+  Nota           : ${formattedNota}
+  Status         : ${status}
 
---------------------------------------------------`;
+  --------------------------------------------------`;
 
   const outputCustomer = `--------------------------------------------------
-*PENYELESAIAN JOKI CODING - @coding_kilat.id*
---------------------------------------------------
+  *PENYELESAIAN JOKI CODING - @coding_kilat.id*
+  --------------------------------------------------
 
-*INFORMASI TUGAS*
------------------
-ID Joki        : ${idJoki}
-ID Klien       : ${idKlien}
-Tanggal Terima : ${tanggalTerima}
-Tanggal Selesai: ${tanggalSelesai}
-Deskripsi      : ${deskripsi || "-"}
+  *INFORMASI TUGAS*
+  -----------------
+  ID Joki        : ${idJoki}
+  ID Klien       : ${idKlien}
+  Tanggal Terima : ${tanggalTerima}
+  Tanggal Selesai: ${tanggalSelesai}
+  Deskripsi      : ${deskripsi || "-"}
 
-*PEMBAYARAN*
------------
-Metode         : ${metode || "-"}
-Status         : ${status}
+  *PEMBAYARAN*
+  -----------
+  Metode         : ${metode || "-"}
+  Status         : ${status}
 
-*SERAH TERIMA*
--------------
-Link/File      : ${linkFile || "-"}
+  *SERAH TERIMA*
+  -------------
+  Link/File      : ${linkFile || "-"}
 
-*CATATAN*
--------------------
-${catatan}
+  *CATATAN*
+  -------------------
+  ${catatan}
 
---------------------------------------------------
-Balas "*Done*" jika penugasan sudah selesai dan diterima.
-*Terima kasih!*
---------------------------------------------------`;
+  --------------------------------------------------
+  Balas "*Done*" jika penugasan sudah selesai dan diterima.
+  *Terima kasih!*
+  --------------------------------------------------`;
 
   document.getElementById("outputAdmin").innerText = outputAdmin;
   document.getElementById("outputCustomer").innerText = outputCustomer;
@@ -107,7 +107,7 @@ async function saveToMongoDB() {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}`, // Menggunakan environment variable
+      "/api/save-joki", // Menggunakan path relatif ke serverless function
       {
         method: "POST",
         headers: {
@@ -130,13 +130,15 @@ async function saveToMongoDB() {
         },
       });
     } else {
-      throw new Error("Gagal menyimpan data");
+      // Handle error dengan lebih spesifik
+      const errorData = await response.json(); // Ambil pesan error dari backend
+      throw new Error(errorData.message || "Gagal menyimpan data ke database");
     }
   } catch (error) {
     Swal.fire({
       icon: "error",
       title: "Oops...",
-      text: "Gagal menyimpan ke database!",
+      text: error.message, // Tampilkan pesan error yang lebih spesifik
       background: "#fff",
       customClass: {
         popup: "animated shake",
