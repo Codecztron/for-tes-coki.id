@@ -107,7 +107,7 @@ async function saveToMongoDB() {
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_URL}`, // Menggunakan environment variable
+      "/api/save", // Using relative path instead of environment variable
       {
         method: "POST",
         headers: {
