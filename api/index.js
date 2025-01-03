@@ -46,12 +46,12 @@ const jokiSchema = new mongoose.Schema({
   idKlien: { type: String, required: true },
   tanggalTerima: { type: String, required: true },
   tanggalSelesai: { type: String, required: true },
-  deskripsi: { type: String },
+  deskripsi: { type: String, default: "-" },
   metode: { type: String, required: true },
   nota: { type: String, required: true },
   status: { type: String, required: true },
-  linkFile: { type: String },
-  catatan: { type: String },
+  linkFile: { type: String, default: "-" },
+  catatan: { type: String, default: "-" },
 });
 
 const Joki = mongoose.model("Joki", jokiSchema);
@@ -59,7 +59,15 @@ const Joki = mongoose.model("Joki", jokiSchema);
 // API Endpoint untuk menyimpan data
 app.post("/api", async (req, res) => {
   try {
-    const newJoki = new Joki(req.body);
+    // Format data sesuai dengan struktur dari frontend
+    const formattedData = {
+      ...req.body,
+      deskripsi: req.body.deskripsi || "-",
+      linkFile: req.body.linkFile || "-",
+      catatan: req.body.catatan || "-",
+    };
+
+    const newJoki = new Joki(formattedData);
     const savedJoki = await newJoki.save();
     res.status(201).json(savedJoki);
   } catch (error) {

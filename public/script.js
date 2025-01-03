@@ -116,25 +116,22 @@ async function saveToMongoDB() {
       body: JSON.stringify(formData),
     });
 
-    const responseData = await response.json(); // Changed from text() to json()
-
-    if (response.ok) {
-      Swal.fire({
-        icon: "success",
-        title: "Berhasil!",
-        text: "Data berhasil disimpan ke database",
-        timer: 2000,
-        showConfirmButton: false,
-        background: "#fff",
-        customClass: {
-          popup: "animated bounceIn",
-        },
-      });
-    } else {
-      throw new Error(
-        responseData.message || "Gagal menyimpan data ke database",
-      );
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(text || "Gagal menyimpan data ke database");
     }
+
+    Swal.fire({
+      icon: "success",
+      title: "Berhasil!",
+      text: "Data berhasil disimpan ke database",
+      timer: 2000,
+      showConfirmButton: false,
+      background: "#fff",
+      customClass: {
+        popup: "animated bounceIn",
+      },
+    });
   } catch (error) {
     Swal.fire({
       icon: "error",
