@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="id">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Penyelesaian Joki Coding - @coding_kilat.id</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Menlo:wght@400&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="container">
+            <div class="profile-header">
+                <div class="profile-image"></div>
+                <div class="profile-info">
+                    <div class="profile-name">coding_kilat.id</div>
+                    <div class="profile-handle">@coding_kilat.id</div>
+                    <div class="profile-bio">
+                        Joki Tugas Coding | Tugas Akhir | Website & App
+                        Android<br />
+                        #jokitugas #jokiprogram #jasakoding #coding #joki
+                        #jokicoding<br />
+                        Contact ? Nihh Social Media Mimin !!
+                    </div>
+                    <a
+                        href="https://linktr.ee/coding_kilat.id"
+                        class="profile-link"
+                        target="_blank"
+                        >linktr.ee/coding_kilat.id</a
+                    >
+                </div>
+            </div>
+
+            <h2>Penyelesaian Joki Coding - @coding_kilat.id</h2>
+
+            <form id="formJoki">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">INFORMASI TUGAS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>ID Joki</td>
+                            <td>
+                                <select id="idJoki" name="idJoki">
+                                    <option value="Web">Web</option>
+                                    <option value="Python">Python</option>
+                                    <option value="Sql">SQL</option>
+                                    <option value="Java">Java</option>
+                                    <option value="C & C++">C & C++</option>
+                                    <option value="Kotlin">Kotlin</option>
+                                    <option value="Android">Android</option>
+                                    <option value="Golang">Golang</option>
+                                    <option value="Laravel">Laravel</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ID Klien</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="idKlien"
+                                    name="idKlien"
+                                    placeholder="Contoh: 01, 02, 03. perhari reset ke 01"
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal Terima</td>
+                            <td>
+                                <input type="date" id="tanggalTerimaDate" />
+                                <input type="time" id="tanggalTerimaTime" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tanggal Selesai</td>
+                            <td>
+                                <input type="date" id="tanggalSelesaiDate" />
+                                <input type="time" id="tanggalSelesaiTime" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Deskripsi</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="deskripsi"
+                                    name="deskripsi"
+                                    placeholder="Contoh: Web Company Profile, App Kalkulator. Random = (-)"
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">PEMBAYARAN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Metode</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="metode"
+                                    name="metode"
+                                    placeholder="Contoh: BCA, OVO, GoPay, Dana, Tunai"
+                                />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>
+                                <select id="status" name="status">
+                                    <option value="Lunas">Lunas</option>
+                                    <option value="Belum Lunas">
+                                        Belum Lunas
+                                    </option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2">SERAH TERIMA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Link/File</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    id="linkFile"
+                                    name="linkFile"
+                                    placeholder="Contoh: Link GitHub, Nama File APK, File .py. Tidak ada = (-)"
+                                />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>CATATAN (Opsional)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <textarea
+                                    id="catatan"
+                                    name="catatan"
+                                    rows="4"
+                                    placeholder="Masukkan catatan di sini...atau Kosong = (-)"
+                                ></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" onclick="generateOutput()">
+                    Generate Output
+                </button>
+            </form>
+
+            <div id="output"></div>
+            <button
+                class="copy-button"
+                type="button"
+                onclick="copyToClipboard()"
+            >
+                Copy to Clipboard
+            </button>
+        </div>
+
+        <script src="script.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    </body>
+</html>
