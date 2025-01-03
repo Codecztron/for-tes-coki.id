@@ -106,16 +106,13 @@ async function saveToMongoDB() {
   };
 
   try {
-    const response = await fetch(
-      "/api/save-joki", // Menggunakan path relatif ke serverless function
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+    const response = await fetch(process.env.NEXT_PUBLIC_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
+      body: JSON.stringify(formData),
+    });
 
     if (response.ok) {
       Swal.fire({
@@ -130,15 +127,14 @@ async function saveToMongoDB() {
         },
       });
     } else {
-      // Handle error dengan lebih spesifik
-      const errorData = await response.json(); // Ambil pesan error dari backend
+      const errorData = await response.json();
       throw new Error(errorData.message || "Gagal menyimpan data ke database");
     }
   } catch (error) {
     Swal.fire({
       icon: "error",
       title: "Oops...",
-      text: error.message, // Tampilkan pesan error yang lebih spesifik
+      text: error.message,
       background: "#fff",
       customClass: {
         popup: "animated shake",

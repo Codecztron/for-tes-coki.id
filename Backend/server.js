@@ -56,7 +56,7 @@ const jokiSchema = new mongoose.Schema({
 const Joki = mongoose.model("Joki", jokiSchema);
 
 // API Endpoint untuk menyimpan data
-app.post("/api/save-joki", async (req, res) => {
+app.post("/api", async (req, res) => {
   try {
     const newJoki = new Joki(req.body);
     const savedJoki = await newJoki.save();
