@@ -2,11 +2,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const rateLimit = require("express-rate-limit"); // Tambahkan rate limiting
+const rateLimit = require("express-rate-limit");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT || 5000;
 
 // Middleware
 
@@ -14,16 +13,17 @@ const port = process.env.PORT || 5000;
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 menit
   max: 100, // Batasi 100 request per IP per windowMs
-  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+  standardHeaders: true,
+  legacyHeaders: false,
   message: "Terlalu banyak request dari IP ini, coba lagi nanti.",
 });
 app.use(limiter);
 
 // 2. CORS (untuk mengizinkan request dari frontend)
+// **PENTING:** Ubah origin ke URL frontend Anda setelah development selesai
 app.use(
   cors({
-    origin: "*", // Allow all origins temporarily for debugging
+    origin: process.env.FRONTEND_URL, // Ambil dari .env (gunakan URL frontend Vercel Anda untuk produksi)
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: false,
@@ -38,7 +38,7 @@ mongoose
   .connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 30000, // Increased timeout
+    serverSelectionTimeoutMS: 30000, // Timeout koneksi 30 detik
   })
   .then(() => console.log("MongoDB Terhubung"))
   .catch((err) => console.error("Koneksi MongoDB gagal:", err));
@@ -90,15 +90,15 @@ app.post("/api", async (req, res) => {
       }
     }
 
-    // Format nota to store raw number
+    // Format data (pastikan format tanggal dan nota benar)
     const formattedData = {
       ...req.body,
       deskripsi: req.body.deskripsi || "-",
       linkFile: req.body.linkFile || "-",
       catatan: req.body.catatan || "-",
-      nota: req.body.nota.toString().replace(/[^0-9]/g, ""),
-      tanggalTerima: `${req.body.tanggalTerima}`,
-      tanggalSelesai: `${req.body.tanggalSelesai}`,
+      nota: req.body.nota.toString().replace(/[^0-9]/g, ""), // Simpan nota sebagai angka saja
+      tanggalTerima: `${req.body.tanggalTerima}`, // Pastikan format tanggal sesuai dengan schema
+      tanggalSelesai: `${req.body.tanggalSelesai}`, // Pastikan format tanggal sesuai dengan schema
     };
 
     const newJoki = new Joki(formattedData);
@@ -113,7 +113,7 @@ app.post("/api", async (req, res) => {
 
     res.status(201).json(savedJoki);
   } catch (error) {
-    console.error("Error saat menyimpan data:", error);
+    console.error("Error saat menyimpan data:", error); // Log error untuk debugging
 
     if (error.name === "ValidationError") {
       return res.status(400).json({
@@ -129,9 +129,4 @@ app.post("/api", async (req, res) => {
   }
 });
 
-// Jalankan server (Hanya diperlukan untuk local development, tidak untuk Vercel)
-// app.listen(port, () => {
-//   console.log(`Server berjalan di port ${port}`);
-// });
-
-module.exports = app; // Export app untuk Vercel
+module.exports = app;

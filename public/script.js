@@ -1,6 +1,6 @@
 // public/script.js
 
-// Function to generate output
+// Function to generate output (Tidak ada perubahan di sini)
 function generateOutput(e) {
   e.preventDefault();
 
@@ -108,7 +108,8 @@ async function saveToMongoDB() {
   };
 
   try {
-    const response = await fetch("https://submit-joki-copip.vercel.app/api", {
+    const response = await fetch("/api", {
+      // **PENTING:** Gunakan relative URL
       method: "POST",
       headers: {
         "Content-Type": "application/json",
